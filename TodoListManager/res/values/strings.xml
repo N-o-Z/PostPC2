@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TodoListManager</string>
+    <string name="add_string">Add</string>
+    <string name="delete_string">Delete</string>
+	<string name="task_hint">Enter New Task</string>
+</resources>
