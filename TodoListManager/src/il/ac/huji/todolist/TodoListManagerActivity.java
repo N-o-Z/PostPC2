@@ -44,7 +44,7 @@ public class TodoListManagerActivity extends Activity {
 				String str = edtNewItem.getText().toString();
 				str = str.trim();
 				edtNewItem.setText("");
-				if(!str.equals("")) {
+				if((str != null) && (!str.equals(""))) {
 					todoAdapter.add(str);
 					return true;
 				}
