@@ -32,10 +32,6 @@ public class RBAdapter extends ArrayAdapter<TodoItem> {
 	    		title.setTextColor(Color.RED);
 	    		date.setTextColor(Color.RED);
 	    	}
-	    	//LinearLayout row = (LinearLayout)super.getView(position,convertView,parent);
-	    	//TextView view = (TextView)super.getView(position, convertView, parent);
-			//int colorPos = position % COLORS.length;
-			//view.setTextColor(COLORS[colorPos]);
 			return view;
 	    }
 	}
