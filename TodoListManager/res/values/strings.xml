@@ -2,7 +2,11 @@
 <resources>
 
     <string name="app_name">TodoListManager</string>
+    <string name="add_item_name">Add New Item</string>
     <string name="add_string">Add</string>
     <string name="delete_string">Delete</string>
 	<string name="task_hint">Enter New Task</string>
+	<string name="btn_cancel_string">Cancel</string>
+	<string name="hint_string">Add New Item</string>
+	<string name="btn_ok_string">OK</string>
 </resources>
