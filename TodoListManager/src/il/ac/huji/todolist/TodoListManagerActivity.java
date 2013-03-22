@@ -3,6 +3,7 @@ package il.ac.huji.todolist;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.TextView;
 
 public class TodoListManagerActivity extends Activity {
 	
@@ -57,22 +57,13 @@ public class TodoListManagerActivity extends Activity {
 		getMenuInflater().inflate(R.menu.todo_list_manager, menu);
 		return true;
 	}
+	
 	public boolean onOptionsItemSelected(MenuItem item) { 
 		switch (item.getItemId()) {
 			case R.id.menuItemAdd : {
 				Intent intent = new Intent(this,AddNewTodoItemActivity.class);  
 				startActivityForResult(intent, ADD_ITEM_RESULT); 
-		/*		String str = edtNewItem.getText().toString();
-				str = str.trim();
-				edtNewItem.setText("");
-				if((str != null) && (!str.equals(""))) {
-					todoAdapter.add(str);
-					return true;
-				}
-				else {
-					return false;
-				}*/
-				return false;
+				return true;
 			}
 			default : {
 				return false;
@@ -83,8 +74,12 @@ public class TodoListManagerActivity extends Activity {
 	public void onCreateContextMenu( ContextMenu menu, View v, ContextMenuInfo info) { 
 		super.onCreateContextMenu(menu, v, info); 
 		getMenuInflater().inflate(R.menu.context_menu, menu);
-		TextView title = (TextView)(v.findViewById(R.id.txtTodoTitle));
-		menu.setHeaderTitle(title.getText());
+		TodoItem item = todoAdapter.getItem(((AdapterContextMenuInfo)info).position);
+		menu.setHeaderTitle(item.getTitle());
+		menu.getItem(1).setTitle(item.getTitle());
+		if(!item.getTitle().startsWith("Call ")) {
+			menu.removeItem(R.id.menuItemCall);
+		}
 	}
 
 	public boolean onContextItemSelected(MenuItem item) { 
@@ -94,10 +89,16 @@ public class TodoListManagerActivity extends Activity {
 		 		todoAdapter.remove(todoAdapter.getItem((info.position)));
 		 		return true;
 		 	}
+		 	case R.id.menuItemCall : {
+		 		String number = todoAdapter.getItem((info.position)).getTitle().substring(5);
+		 		Uri uriNum = Uri.parse("tel:"+number);
+		 		Intent intent = new Intent(Intent.ACTION_DIAL,uriNum);  
+				startActivity(intent); 
+				return true;
+		 	}
 		 	default: {
 		 		return false;
 		 	}
 		 }
 	}
-	
 }

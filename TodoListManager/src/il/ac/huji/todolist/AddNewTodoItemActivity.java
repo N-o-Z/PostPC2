@@ -1,7 +1,6 @@
 package il.ac.huji.todolist;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,15 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class AddNewTodoItemActivity extends Activity {
  
 	private Button btnCancel, btnOK;
 	private DatePicker datePicker;
 	private EditText edtNewItem; 
-	private TextView titleView;
-	private TextView dateView;
 	
 	public void onCreate(Bundle unused) { 
 		super.onCreate(unused); 
@@ -27,13 +23,16 @@ public class AddNewTodoItemActivity extends Activity {
 		btnCancel = (Button)findViewById(R.id.btnCancel);
 		datePicker = (DatePicker)findViewById(R.id.datePicker);
 		edtNewItem = (EditText)findViewById(R.id.edtNewItem);
-		titleView = (TextView)findViewById(R.id.txtTodoTitle);
-		dateView = (TextView)findViewById(R.id.txtTodoDueDate);
 		
 		btnOK.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
+				
+				if(edtNewItem.getText().toString().trim().equals("")) {
+					setResult(RESULT_CANCELED); 
+					finish();
+				}
 				 
 				Calendar date = Calendar.getInstance();
 				int year = datePicker.getYear();
@@ -52,15 +51,9 @@ public class AddNewTodoItemActivity extends Activity {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub 
 				setResult(RESULT_CANCELED); 
 				finish();
 			}
 		});
-		
-		
-	
-
-	//	setTitle(foo);
 	} 	
 }
