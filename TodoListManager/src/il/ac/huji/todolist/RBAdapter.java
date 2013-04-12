@@ -1,22 +1,24 @@
 package il.ac.huji.todolist;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class RBAdapter extends ArrayAdapter<TodoItem> {
+public class RBAdapter extends ArrayAdapter<ITodoItem> {
 	
 	    
-	    public RBAdapter(Context context, int resource, ArrayList<TodoItem> arrayList) {
+	    public RBAdapter(Context context, int resource, List<ITodoItem> arrayList) {
 	        super(context, resource, arrayList);
 	    }
 	    
@@ -31,16 +33,15 @@ public class RBAdapter extends ArrayAdapter<TodoItem> {
 	    	//set title
 	    	title.setText(item.getTitle());
 	    	
-	    	
 	    	Date itemDate = item.getDueDate();
-	    	
 	    	//set date
 	    	if(itemDate == null) {
 	    		date.setText("No due date");			
 			}
 			else {
-				DateFormat formatter = new SimpleDateFormat("dd/MM/yyy");
-				String dateString = formatter.format(date);
+				
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyy",Locale.US);
+				String dateString = formatter.format(itemDate);
 				date.setText(dateString);
 			}
 	    	

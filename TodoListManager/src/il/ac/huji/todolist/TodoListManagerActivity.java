@@ -1,7 +1,11 @@
 package il.ac.huji.todolist;
 
-//import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.parse.Parse;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,25 +23,30 @@ public class TodoListManagerActivity extends Activity {
 	
 	private final int ADD_ITEM_RESULT = 1;
 	private ListView listView; 
-//	private ArrayList<TodoItem> arrayList;
+	private List<ITodoItem> arrayList;
 	private TodoDAL _dal;
-
+	private RBAdapter todoAdapter;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_todo_list_manager);
-		
+		Parse.initialize(this, this.getString(R.string.parseApplication), this.getString(R.string.clientKey));
+		//Parse.initialize(this, "1FHGNdMfbFd3tgDdlDF4FqETPOBpWvQlfVTfteRe", "kmzUb62p9mtIy4XBuu4kZV29GyUyrANh3H9JDOvk");
+		ParseUser.enableAutomaticUser();
 		_dal = new TodoDAL(this);
 		
-//		arrayList = new ArrayList<TodoItem>();
+		arrayList = _dal.all();
+		
 		listView = (ListView)findViewById(R.id.lstTodoItems); 
-	
+		todoAdapter = new RBAdapter(this,android.R.layout.simple_list_item_1,arrayList);
 		registerForContextMenu(listView);
 		
 		
-		listView.setAdapter(_dal.getAdapter());
+		listView.setAdapter(todoAdapter);
+		
+		
 		
 	}
 
@@ -50,6 +59,7 @@ public class TodoListManagerActivity extends Activity {
 					}
 					case (RESULT_OK) : {
 						_dal.insert(new TodoItem((String)data.getStringExtra("title"),(Date)data.getSerializableExtra("dueDate")));
+						todoAdapter.add(new TodoItem((String)data.getStringExtra("title"),(Date)data.getSerializableExtra("dueDate")));
 					}
 				}
 			} 
@@ -79,7 +89,7 @@ public class TodoListManagerActivity extends Activity {
 	public void onCreateContextMenu( ContextMenu menu, View v, ContextMenuInfo info) { 
 		super.onCreateContextMenu(menu, v, info); 
 		getMenuInflater().inflate(R.menu.context_menu, menu);
-		TodoItem item = (TodoItem)_dal.todoAdapter.getItem(((AdapterContextMenuInfo)info).position);
+		TodoItem item = (TodoItem)todoAdapter.getItem(((AdapterContextMenuInfo)info).position);
 		menu.setHeaderTitle(item.getTitle());
 		menu.getItem(1).setTitle(item.getTitle());
 		if(!item.getTitle().startsWith("Call ")) {
@@ -91,11 +101,12 @@ public class TodoListManagerActivity extends Activity {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
 		 switch (item.getItemId()) {
 		 	case R.id.menuItemDelete: {
-		 		_dal.delete((TodoItem)_dal.todoAdapter.getItem((info.position)));
+		 		_dal.delete((TodoItem)todoAdapter.getItem((info.position)));
+		 		todoAdapter.remove(todoAdapter.getItem((info.position)));
 		 		return true;
 		 	}
 		 	case R.id.menuItemCall : {
-		 		String number = ((TodoItem)_dal.todoAdapter.getItem((info.position))).getTitle().substring(5);
+		 		String number = ((TodoItem)todoAdapter.getItem((info.position))).getTitle().substring(5);
 		 		Uri uriNum = Uri.parse("tel:"+number);
 		 		Intent intent = new Intent(Intent.ACTION_DIAL,uriNum);  
 				startActivity(intent); 
