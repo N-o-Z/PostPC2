@@ -2,6 +2,8 @@ package il.ac.huji.todolist;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -26,9 +28,23 @@ public class RBAdapter extends ArrayAdapter<TodoItem> {
 	    	TextView date = (TextView)view.findViewById(R.id.txtTodoDueDate);
 	    	TodoItem item = (TodoItem)getItem(position);
 	    	
+	    	//set title
 	    	title.setText(item.getTitle());
-	    	date.setText(item.getDateString());
-	    	if((item.getDate() != null) && ((item.getDate().compareTo(new Date()))<0)) {
+	    	
+	    	
+	    	Date itemDate = item.getDueDate();
+	    	
+	    	//set date
+	    	if(itemDate == null) {
+	    		date.setText("No due date");			
+			}
+			else {
+				DateFormat formatter = new SimpleDateFormat("dd/MM/yyy");
+				String dateString = formatter.format(date);
+				date.setText(dateString);
+			}
+	    	
+	    	if((item.getDueDate() != null) && ((item.getDueDate().compareTo(new Date()))<0)) {
 	    		title.setTextColor(Color.RED);
 	    		date.setTextColor(Color.RED);
 	    	}
